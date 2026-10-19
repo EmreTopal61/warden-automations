@@ -23,3 +23,10 @@ npm-debug.log*
 # vercel
 .vercel
 .shots/
+
+# impeccable inceleme ekran görüntüleri
+.impeccable/review/
+
+# yerel araç kurulumları (impeccable skill + motor)
+.claude/
+.impeccable/questions/

@@ -15,7 +15,7 @@ export default defineConfig({
         // 3D yığınını ayrı chunk'lara böl — initial bundle küçük kalsın, tembel yüklensin.
         manualChunks: {
           three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/postprocessing'],
+          r3f: ['@react-three/fiber'],
         },
       },
     },
