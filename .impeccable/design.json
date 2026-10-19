@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T00:00:00Z",
+  "title": "Design System: Warden Automations",
+  "extensions": {
+    "colorMeta": {
+      "security-paper": { "role": "neutral", "displayName": "Security Paper", "canonical": "#E6EAE3", "tonalRamp": ["#232722", "#3B4239", "#555E53", "#717B6E", "#8F998B", "#AEB7AA", "#CDD4C9", "#E6EAE3"] },
+      "paper-lift": { "role": "neutral", "displayName": "Paper Lift", "canonical": "#EEF1EB", "tonalRamp": ["#262924", "#3E433B", "#585F55", "#747C70", "#929A8E", "#B2B9AD", "#D2D8CE", "#EEF1EB"] },
+      "print-ink": { "role": "primary", "displayName": "Print Ink", "canonical": "#151A27", "tonalRamp": ["#151A27", "#262D40", "#3D4557", "#596174", "#7A8193", "#9DA3B2", "#C2C6D1", "#E6E8EE"] },
+      "ink-press": { "role": "primary", "displayName": "Ink Press", "canonical": "#262D40" },
+      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#3D4557" },
+      "ink-faint": { "role": "neutral", "displayName": "Ink Faint", "canonical": "#596174" },
+      "rule": { "role": "neutral", "displayName": "Hairline Rule", "canonical": "rgba(21, 26, 39, 0.26)" },
+      "guilloche-green": { "role": "neutral", "displayName": "Guilloche Green", "canonical": "#6F8F80", "tonalRamp": ["#1C2722", "#2E4038", "#3E6E5E", "#55786A", "#6F8F80", "#8FA89A", "#B6C8BE", "#DDE7E1"] },
+      "rainbow-green": { "role": "neutral", "displayName": "Rainbow Green", "canonical": "#3E6E5E" },
+      "stamp-violet": { "role": "secondary", "displayName": "Stamp Violet", "canonical": "#5B3BA6", "tonalRamp": ["#1E1238", "#33215F", "#472E84", "#5B3BA6", "#7A60BC", "#9A86CF", "#C0B3E2", "#E6E0F4"] },
+      "stamp-violet-faded": { "role": "secondary", "displayName": "Stamp Violet Faded", "canonical": "#9A86CF" },
+      "registry-red": { "role": "tertiary", "displayName": "Registry Red", "canonical": "#B3261E", "tonalRamp": ["#3A0C09", "#5E1410", "#851C16", "#B3261E", "#CF5048", "#E07F79", "#EEB0AC", "#F9E0DE"] },
+      "scrollbar-sage": { "role": "neutral", "displayName": "Scrollbar Sage", "canonical": "#8A9284" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The H1 only; 2.55rem / 3.7rem / 4.35rem / 5rem at base / sm / lg / xl." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles, width 125%; form title scales to 3.5rem." },
+      "title": { "displayName": "Title", "purpose": "Form section heads (BÖLÜM A-D) and the receipt heading." },
+      "question": { "displayName": "Question", "purpose": "Question labels, step statements, FAQ questions." },
+      "body": { "displayName": "Body", "purpose": "Prose, 36-64ch measure." },
+      "lead": { "displayName": "Lead", "purpose": "Paragraph under a headline, Ink Soft." },
+      "answer": { "displayName": "Answer", "purpose": "Visitor-typed text, always Stamp Violet." },
+      "label": { "displayName": "Label", "purpose": "Cell keys, column heads, list heads; 82% width uppercase." },
+      "code": { "displayName": "Code", "purpose": "Question numbers, evrak numbers, example codes, counts, dates; tabular lining numerals." },
+      "button": { "displayName": "Button / Wordmark", "purpose": "Buttons, wordmark, seal word; 125% width uppercase." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "tick-stroke", "value": "0.16s cubic-bezier(0.3, 0.7, 0.2, 1), second stroke delayed 0.11s", "purpose": "Two pen strokes drawing the violet X in a tick box." },
+      { "name": "seal-drop", "value": "0.42s cubic-bezier(0.2, 0.9, 0.12, 1); scale 1.9 to 1, rotate -3 to -9deg, blur 6px to 0", "purpose": "ALINDI seal stamped on submission." },
+      { "name": "receipt-reveal", "value": "0.5s cubic-bezier(0.16, 1, 0.3, 1), 0.55s delay, 8px rise", "purpose": "Receipt text after the seal lands." },
+      { "name": "rosette-engrave", "value": "2.4s cubic ease-out draw range", "purpose": "Rosette drawn strand by strand on first view." },
+      { "name": "rosette-reform", "value": "exponential approach, rate 4.5/s", "purpose": "Rosette geometry eases to the new answers." },
+      { "name": "reduced-motion", "value": "animation and transition 0.01ms; smooth scroll off; rosette settles instantly", "purpose": "prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ],
+    "underprint": {
+      "tile": "240x120 SVG, 12 sine strands",
+      "stroke": "#151A27 at 6% opacity, 0.6px",
+      "purpose": "Seamless guilloche ground on body."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square print-ink action; submit the form, book the call.",
+      "html": "<button class=\"ds-btn-primary\">Formu imzala ve gönder</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 32px; background: #151A27; color: #E6EAE3; border: 0; border-radius: 0; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; font-stretch: 125%; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; transition: background-color 0.15s, transform 0.15s; } .ds-btn-primary:hover { background: #262D40; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 2px solid #5B3BA6; outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Action",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Secondary action as underlined ink text that takes the visitor's violet on hover.",
+      "html": "<button class=\"ds-btn-text\">Başka bir şirket için yeni form doldur</button>",
+      "css": ".ds-btn-text { background: none; border: 0; padding: 0; color: #151A27; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; font-size: 16px; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; cursor: pointer; } .ds-btn-text:hover { color: #5B3BA6; } .ds-btn-text:focus-visible { outline: 2px solid #5B3BA6; outline-offset: 3px; }"
+    },
+    {
+      "name": "Tick Box",
+      "kind": "chip",
+      "refersTo": "tick-box",
+      "description": "Square form box; checked state is a violet two-stroke X.",
+      "html": "<label class=\"ds-tick\"><input type=\"checkbox\" checked><span class=\"ds-tick-box\"><svg viewBox=\"0 0 28 28\" fill=\"none\"><path d=\"M5.5 5.8C10 10.4 14.6 15.2 21.8 22.4\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M22 5.4C16.6 10.6 11.8 15.8 6 22.2\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/></svg></span><span>Restoran, kafe, otel</span></label>",
+      "css": ".ds-tick { display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 8px 12px 8px 0; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; font-size: 16px; line-height: 1.375; color: #151A27; cursor: pointer; } .ds-tick input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-tick-box { position: relative; flex: none; margin-top: 1px; width: 22px; height: 22px; border: 1.5px solid #151A27; background: rgba(238, 241, 235, 0.5); color: #5B3BA6; transition: background-color 0.15s; } .ds-tick-box svg { position: absolute; inset: -4px; width: 28px; height: 28px; display: none; } .ds-tick input:checked + .ds-tick-box svg { display: block; } .ds-tick:hover .ds-tick-box { background: #EEF1EB; } .ds-tick input:focus-visible + .ds-tick-box { outline: 2px solid #5B3BA6; outline-offset: 2px; }"
+    },
+    {
+      "name": "Line Input",
+      "kind": "input",
+      "refersTo": "line-input",
+      "description": "Underline-only field; the visitor writes in violet, errors underline in red.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-in\">Şirketinizin adı *</label><input id=\"ds-in\" class=\"ds-line-input\" value=\"Kaya Makina\"><input class=\"ds-line-input\" aria-invalid=\"true\" placeholder=\"E-posta adresiniz\"><p class=\"ds-error\">Geçerli bir e-posta adresi yazın.</p></div>",
+      "css": ".ds-field { font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; max-width: 420px; } .ds-field-label { display: block; font-size: 17px; font-weight: 600; color: #151A27; padding-bottom: 12px; } .ds-line-input { display: block; width: 100%; margin-bottom: 12px; background: transparent; border: 0; border-bottom: 1px solid rgba(21, 26, 39, 0.7); border-radius: 0; padding: 8px 0; font: inherit; font-size: 18px; font-weight: 500; color: #5B3BA6; caret-color: #5B3BA6; transition: border-color 0.15s; } .ds-line-input::placeholder { font-weight: 400; color: #596174; } .ds-line-input:focus { outline: none; border-bottom: 2px solid #5B3BA6; } .ds-line-input[aria-invalid=true] { border-bottom-color: #B3261E; } .ds-error { margin: 0; font-size: 15px; font-weight: 500; color: #B3261E; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "button-header",
+      "description": "Sticky paper header: seal and wordmark, evrak number in red, links, square ink button.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-mark\" href=\"#\"><svg viewBox=\"0 0 200 200\" width=\"34\" height=\"34\" fill=\"none\" stroke=\"currentColor\"><circle cx=\"100\" cy=\"100\" r=\"95\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"86\" stroke-width=\"3\"/></svg><span>Warden Automations</span></a><span class=\"ds-nav-code\">Form WA-01 · Evrak no <b>WA-2026/14826</b></span><nav><a href=\"#\">Nasıl işler</a><a href=\"#\">Örnekler</a><a class=\"ds-nav-btn\" href=\"#\">Formu doldur</a></nav></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 64px; padding: 0 32px; background: #E6EAE3; border-bottom: 1px solid #151A27; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; color: #151A27; } .ds-nav-mark { display: flex; align-items: center; gap: 12px; color: #151A27; text-decoration: none; font-stretch: 125%; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; } .ds-nav-code { font-size: 13px; color: #3D4557; font-variant-numeric: tabular-nums; } .ds-nav-code b { color: #B3261E; font-weight: 600; } .ds-nav nav { display: flex; align-items: center; gap: 28px; } .ds-nav nav a { color: #151A27; font-size: 15px; font-weight: 500; text-decoration: none; } .ds-nav nav a:hover { text-decoration: underline; text-underline-offset: 0.22em; } .ds-nav .ds-nav-btn { display: inline-flex; align-items: center; height: 40px; padding: 0 16px; background: #151A27; color: #E6EAE3; font-stretch: 125%; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; } .ds-nav .ds-nav-btn:hover { background: #262D40; text-decoration: none; } .ds-nav a:focus-visible { outline: 2px solid #5B3BA6; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ruled Data Cells",
+      "kind": "card",
+      "refersTo": "data-cells",
+      "description": "Key-value cells in a hairline grid instead of cards.",
+      "html": "<dl class=\"ds-cells\"><div><dt>Evrak no</dt><dd class=\"ds-red\">WA-2026/14826</dd></div><div><dt>Tarih</dt><dd>19.10.2026</dd></div><div><dt>Soru</dt><dd>15</dd></div></dl>",
+      "css": ".ds-cells { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; border-top: 1px solid #151A27; border-left: 1px solid #151A27; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; } .ds-cells div { border-right: 1px solid #151A27; border-bottom: 1px solid #151A27; padding: 10px 12px; } .ds-cells dt { font-stretch: 82%; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; color: #596174; } .ds-cells dd { margin: 4px 0 0; font-size: 14px; font-weight: 600; color: #151A27; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; } .ds-cells .ds-red { color: #B3261E; }"
+    },
+    {
+      "name": "Question Row",
+      "kind": "custom",
+      "refersTo": "question-row",
+      "description": "Numbered form row: tabular numeral column, question, hint, hairline beneath.",
+      "html": "<div class=\"ds-q\"><span class=\"ds-q-n\">07</span><div><p class=\"ds-q-l\">Ekibinizin her hafta tekrar tekrar yaptığı iş hangisi? *</p><p class=\"ds-q-h\">Kim yapıyor, nereden başlıyor, nerede bitiyor?</p><textarea class=\"ds-q-area\" rows=\"3\">Siparişleri WhatsApp'tan okuyup Excel'e giriyoruz.</textarea></div></div>",
+      "css": ".ds-q { display: grid; grid-template-columns: 3rem 1fr; gap: 0 8px; padding: 28px 0; border-bottom: 1px solid rgba(21, 26, 39, 0.26); font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; } .ds-q-n { font-size: 15px; font-weight: 600; color: #596174; font-variant-numeric: tabular-nums lining-nums; } .ds-q-l { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.375; color: #151A27; } .ds-q-h { margin: 4px 0 16px; font-size: 15px; line-height: 1.6; color: #3D4557; } .ds-q-area { width: 100%; min-height: 96px; resize: vertical; background: transparent repeating-linear-gradient(to bottom, transparent 0 31px, rgba(21, 26, 39, 0.2) 31px 32px); background-attachment: local; border: 0; border-bottom: 1px solid rgba(21, 26, 39, 0.7); border-radius: 0; padding: 3px 0 0; font: inherit; font-size: 18px; line-height: 32px; font-weight: 500; color: #5B3BA6; caret-color: #5B3BA6; } .ds-q-area:focus { outline: none; border-bottom: 2px solid #5B3BA6; }"
+    },
+    {
+      "name": "Kaşe Seal",
+      "kind": "custom",
+      "refersTo": "seal",
+      "description": "Round company seal in currentColor; ink for Warden, violet for the visitor's ALINDI receipt.",
+      "html": "<div class=\"ds-seal\"><svg viewBox=\"0 0 200 200\" width=\"160\" height=\"160\"><defs><path id=\"ds-ring\" d=\"M100,100 m-73,0 a73,73 0 1,1 146,0 a73,73 0 1,1 -146,0\"/></defs><g fill=\"none\" stroke=\"currentColor\"><circle cx=\"100\" cy=\"100\" r=\"95\" stroke-width=\"4\"/><circle cx=\"100\" cy=\"100\" r=\"86\" stroke-width=\"1.4\"/><circle cx=\"100\" cy=\"100\" r=\"61\" stroke-width=\"1.4\"/></g><text fill=\"currentColor\" font-size=\"11.5\" font-weight=\"700\" style=\"font-stretch:112%\"><textPath href=\"#ds-ring\" textLength=\"452\" lengthAdjust=\"spacing\">WARDEN AUTOMATIONS · İSTANBUL · FORM WA-01 ·</textPath></text><g fill=\"currentColor\" text-anchor=\"middle\"><text x=\"100\" y=\"98\" font-size=\"23\" font-weight=\"800\" style=\"font-stretch:125%\">ALINDI</text><line x1=\"56\" x2=\"144\" y1=\"108\" y2=\"108\" stroke=\"currentColor\" stroke-width=\"1.4\"/><text x=\"100\" y=\"124\" font-size=\"11\" font-weight=\"600\">WA-2026/14826</text></g></svg></div>",
+      "css": ".ds-seal { display: inline-block; color: #5B3BA6; transform: rotate(-9deg); font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; font-variant-numeric: tabular-nums; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Official Form on Security Paper",
+    "overview": "Every surface is one printed document: Warden's Form WA-01 on pale green-gray security paper, carrying a fine guilloche underprint, hairline rules, thick-thin double rules, square tick boxes and one round company seal (kaşe). Warden prints in blue-black ink; the visitor writes in violet stamp ink. The page reads as something to fill in and sign, not something to scroll past. The world rejects the category default of a near-black neon \"AI network\" hero over product cards.\n\nDensity is that of a well-set government form: a 12-column sheet, numbered rows separated by hairlines, labels pinned to what they describe, tabular numerals for every code. Colour is spent only on what matters now: violet only on the visitor's own marks, registry red only on evrak numbers and errors. Depth comes from print layering (underprint, ink, stamp), never from shadow or blur. The one dimensional object is the 3D guilloche rosette, a line drawing in the same inks that the visitor's answers re-form.",
+    "keyCharacteristics": [
+      "Security paper ground with a seamless 240x120 guilloche underprint at 6% ink opacity.",
+      "One family, Archivo Variable; the width axis carries voice (125% / 112% / 100% / 82%).",
+      "Zero radius everywhere except the round seal and the circled step numerals.",
+      "Hairlines (1px), heavy section rules (2px) and the thick-thin double rule as the only structure.",
+      "Violet is the visitor's ink; red is the registry's ink; everything else is print ink."
+    ],
+    "rules": [
+      { "name": "The Visitor's Ink Rule", "body": "Violet appears only on marks the visitor made or caused. Warden never prints in violet; no Warden heading, button or decoration may use it.", "section": "colors" },
+      { "name": "The Registry Ink Rule", "body": "Red means the registry: evrak numbers and errors only. Users read red as error, so errors stay red even though the form is otherwise monochrome.", "section": "colors" },
+      { "name": "The Newest Mark Rule", "body": "The most recent visitor mark is the darkest; earlier marks fade to Stamp Violet Faded.", "section": "colors" },
+      { "name": "The Width Is Voice Rule", "body": "Hierarchy is carried by the wdth axis, not by a second family: 125% headings and wordmark, 112% H1 and section titles, 82% labels. Never add a display or mono face.", "section": "typography" },
+      { "name": "The Tabular Code Rule", "body": "Every number that identifies or counts (01-15, WA-2026/xxxxx, Ö-01, 8/15, dates) is set with tabular lining numerals.", "section": "typography" },
+      { "name": "The Printed Plane Rule", "body": "Nothing floats. No shadows, gradients, glass or blur on interface elements; separation comes from rules and ink weight.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the page on Security Paper with the 240x120 guilloche underprint at 6% ink opacity.",
+      "Do use Stamp Violet only for the visitor's own marks: ticks, typed answers, rosette strands, the signature echo, the ALINDI seal.",
+      "Do use Registry Red for evrak numbers and for every error message and invalid field.",
+      "Do set every code and count in tabular lining numerals.",
+      "Do open sections with a 2px ink rule and the form with the thick-thin double rule.",
+      "Do carry hierarchy with Archivo's width axis: 125% headings and wordmark, 112% H1 and section titles, 82% labels."
+    ],
+    "donts": [
+      "Don't round corners; only the seal and the step numerals are round.",
+      "Don't use cards, boxed panels or shadows; rows, rules and cells carry structure.",
+      "Don't place eyebrows or kickers above headings.",
+      "Don't use gradient fills or glass effects; the only colour transition is the rosette's rainbow print along its strands, and textarea ledger lines are rules, not fills.",
+      "Don't add a second type family.",
+      "Don't print Warden's own content in violet or decorate with red."
+    ]
+  }
+}

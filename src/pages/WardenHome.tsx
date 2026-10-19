@@ -1,291 +1,323 @@
-import { motion } from 'framer-motion';
-import { ArrowRight, Mic, Target, Radar, Search, ScanLine, PhoneCall } from 'lucide-react';
-import ProductCard from '../components/ProductCard';
-import IntegrationsMarquee from '../components/IntegrationsMarquee';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import AutomationForm from '../components/AutomationForm';
 import FaqSection from '../components/FaqSection';
-import ComparisonSection from '../components/ComparisonSection';
+import { GuillocheBand } from '../components/PrintMarks';
+import { paramsFromAnswers } from '../components/rosetteParams';
+import { Answers, EMPTY_ANSWERS, QUESTION_COUNT, SECTORS } from '../data/form';
 
-interface WardenHomeProps {
-  onOpenMusterimDemo: () => void;
+const Rosette3D = lazy(() => import('../components/Rosette3D'));
+
+const DRAFT_KEY = 'warden-form-draft';
+
+function loadDraft(): Answers {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    // onay her seferinde bilerek yeniden verilmeli; taslaktan geri yüklenmez
+    if (raw) return { ...EMPTY_ANSWERS, ...JSON.parse(raw), kvkkConsent: false };
+  } catch {
+    /* tarayıcı depolaması kapalı olabilir; boş formla devam */
+  }
+  return EMPTY_ANSWERS;
 }
 
-export default function WardenHome({ onOpenMusterimDemo }: WardenHomeProps) {
-  const products = [
-    {
-      id: 'musterim',
-      index: '01',
-      name: 'Müşterim',
-      description: 'AI Destekli Lead Nitelendirme ve Skorlama',
-      details:
-        'Gelen müşteri adaylarını otomatik analiz eder, nitelendirir ve üretken yapay zekayla en yüksek potansiyelli fırsatları öne çıkarır. Gerçek zamanlı skorlama satış ekibinizin verimliliğini 3x artırır.',
-      Icon: Target,
-      button: 'Sistemi Test Et',
-      link: 'https://wardenb2b-bwhnkluukmucoikbjsajyf.streamlit.app/',
-      points: ['Gerçek zamanlı skor', 'Niyet analizi', 'Otomatik önceliklendirme'],
-      isDemoButton: true,
-    },
-    {
-      id: 'voice-warden',
-      index: '02',
-      name: 'Voice Warden',
-      description: '7/24 Otonom Sesli Asistan',
-      details:
-        'Doğal dil işlemeyle güçlenen Voice Warden müşteri çağrılarını 7/24 yönetir. Randevu almaktan sorun çözmeye kadar, insan gibi konuşan asistan tam zamanlı destek sağlar.',
-      Icon: Mic,
-      button: 'Demo Talebi',
-      link: 'https://calendly.com/e7555222/15-min-ai-strategy-discovery-call-warden-automations',
-      points: ['Doğal Türkçe diyalog', 'Otomatik randevu', 'Canlı CRM kaydı'],
-      isDemoButton: false,
-    },
-    {
-      id: 'data-hunter',
-      index: '03',
-      name: 'Data Hunter',
-      description: 'Sektörel Veri Kazıma ve Müşteri Keşif Robotu',
-      details:
-        'Web üzerindeki binlerce kaynaktan B2B verisini toplar ve doğrular. Sektörünüze uygun potansiyel müşterileri keşfeder, iletişim bilgilerini derler ve kampanyaya hazır veri setleri hazırlar.',
-      Icon: Radar,
-      button: 'Demo Talebi',
-      link: 'https://calendly.com/e7555222/15-min-ai-strategy-discovery-call-warden-automations',
-      points: ['Sektörel tarama', 'Veri doğrulama', 'Otomatik zenginleştirme'],
-      isDemoButton: false,
-    },
-  ];
+const STEPS = [
+  {
+    what: 'Formu siz doldurursunuz.',
+    detail: 'İşinizi kendi kelimelerinizle anlatırsınız. Teknik bilgi gerekmez, yaklaşık dört dakika sürer.',
+  },
+  {
+    what: 'Cevaplarınız analiz akışında okunur.',
+    detail:
+      'Form, n8n üzerinde kurduğumuz akışa düşer. Yapay zekâ en çok zaman ve müşteri kaybettiren noktayı bulur, onu çözebilecek otomasyon örnekleriyle eşleştirir.',
+  },
+  {
+    what: 'Öneriyi birlikte konuşuruz.',
+    detail:
+      'Size görüşme bağlantısı içeren bir e-posta gönderiyoruz. 15 dakikalık görüşmede şirketinize özel otomasyonu, neye bağlanacağını, kapsamını ve fiyatını netleştiririz.',
+  },
+];
 
-  const stats = [
-    { value: '7/24', label: 'kesintisiz operasyon' },
-    { value: '%63', label: 'daha hızlı lead yanıtı' },
-    { value: '3.4x', label: 'nitelikli görüşme artışı' },
-    { value: '0', label: 'kaçırılan fırsat' },
-  ];
+// Kullanıcının n8n'de kurduğu gerçek akış türlerinden türetilmiş örnekler (müşteri vakası değil).
+const EXAMPLES = [
+  {
+    code: 'Ö-01',
+    who: 'Restoran, kafe',
+    problem: 'Rezervasyonlar telefonda ve WhatsApp’ta dağılıyor.',
+    automation: 'WhatsApp’tan gelen masa taleplerini okur, uygunluğa bakar, onay mesajını gönderir ve rezervasyon tablosuna yazar.',
+    tools: 'WhatsApp Business, Google Sheets',
+  },
+  {
+    code: 'Ö-02',
+    who: 'Üretim, depo',
+    problem: 'Stok Excel’de; eksik ancak sipariş gelince fark ediliyor.',
+    automation: 'Drive’daki stok dosyasını her gün tarar, kritik seviyeye düşen kalemleri raporlar, sorumluya e-posta atar.',
+    tools: 'Google Drive, Excel, Gmail',
+  },
+  {
+    code: 'Ö-03',
+    who: 'B2B satış',
+    problem: 'Yeni müşteri listesi elle toplanıyor.',
+    automation: 'Google Haritalar’da hedef bölge ve sektörü tarar, işletme bilgilerini toplar ve tabloya düzenli aktarır.',
+    tools: 'Google Haritalar, Apify, Google Sheets',
+  },
+  {
+    code: 'Ö-04',
+    who: 'Satış ekipleri',
+    problem: 'Tanıtım e-postaları herkese aynı metinle gidiyor.',
+    automation: 'Her firmanın web sitesini okur, ona özel bir e-posta taslağı yazar ve gönderilmeden önce onayınıza sunar.',
+    tools: 'Gmail, n8n',
+  },
+  {
+    code: 'Ö-05',
+    who: 'Yöneticiler',
+    problem: 'Gelen kutusu her sabah yarım saati yiyor.',
+    automation: 'Okunmamış e-postaları her sabah özetler, cevap bekleyenleri ayırır ve tek bir mesajda size iletir.',
+    tools: 'Gmail, n8n',
+  },
+  {
+    code: 'Ö-06',
+    who: 'Pazarlama',
+    problem: 'Rakip ve sektör takibi düzensiz.',
+    automation: 'Seçtiğiniz kaynakları tarar, haftalık sektör özetini hazırlar ve Telegram ya da e-postayla gönderir.',
+    tools: 'RSS, Telegram, Gmail',
+  },
+];
 
-  const steps = [
-    { n: '01', t: 'Keşfet', d: 'Data Hunter hedef pazarınızı tarar, potansiyel müşterileri ağa düğüm olarak ekler.', Icon: Search },
-    { n: '02', t: 'Nitelendir', d: 'Müşterim her düğümü gerçek zamanlı puanlar; sıcak sinyaller öne çıkar.', Icon: ScanLine },
-    { n: '03', t: 'Dönüştür', d: 'Voice Warden en yüksek skorlu fırsatları otomatik arar ve randevuya çevirir.', Icon: PhoneCall },
-  ];
+const TOOL_NAMES = [
+  'n8n',
+  'Google Sheets',
+  'Gmail',
+  'WhatsApp Business',
+  'HubSpot',
+  'Pipedrive',
+  'Calendly',
+  'Apify',
+  'Hunter.io',
+  'Instantly',
+  'ZeroBounce',
+  'Vapi',
+];
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 24, rotateX: 10, transformPerspective: 900 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transformPerspective: 900,
-      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
-    },
-  };
-  const stagger = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-  };
+interface Props {
+  registryNo: string;
+  onNewRegistry: () => void;
+}
 
-  const handleProductClick = (product: (typeof products)[0]) => {
-    if (product.isDemoButton) onOpenMusterimDemo();
-    else window.open(product.link, '_blank');
+export default function WardenHome({ registryNo, onNewRegistry }: Props) {
+  const [answers, setAnswers] = useState<Answers>(loadDraft);
+  const sent = useRef(false);
+  const reduceMotion = useReducedMotion();
+  const heroParams = useMemo(() => paramsFromAnswers(answers), [answers]);
+
+  useEffect(() => {
+    if (sent.current) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...answers, kvkkConsent: false }));
+    } catch {
+      /* depolama yoksa taslak tutulmaz */
+    }
+  }, [answers]);
+
+  const pickSector = (value: string) => {
+    setAnswers((a) => ({ ...a, sector: value }));
+    // form oradan devam eder: bir sonraki cevapsız soruya git
+    requestAnimationFrame(() => {
+      const target = document.getElementById(value === 'diger' ? 'q-sector' : 'q-employees');
+      target?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+      target?.querySelector<HTMLElement>(value === 'diger' ? '#in-sectorOther' : 'input')?.focus({ preventScroll: true });
+    });
   };
 
   return (
-    <>
-      {/* HERO */}
-      <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-20 px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.div initial="hidden" animate="visible" variants={stagger}>
-            <motion.span variants={fadeInUp}
-              className="inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.32em] text-warden-cyan">
-              <span className="w-6 h-px bg-gradient-to-r from-warden-cyan to-transparent" />
-              Otonom B2B Yapay Zeka
-            </motion.span>
-
-            <motion.h1 variants={fadeInUp}
-              className="font-display text-[2.6rem] sm:text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight text-zinc-50 mt-6 mb-6 sm:mt-7 sm:mb-7 leading-[1.07] sm:leading-[1.04]">
-              İşletmenizin{' '}
-              <span className="text-zinc-400 font-normal">kendi kendine çalışan</span>{' '}
-              <span className="warden-gradient-text">büyüme ağı</span>
-            </motion.h1>
-
-            <motion.p variants={fadeInUp}
-              className="text-lg md:text-xl text-zinc-400 font-light max-w-2xl mx-auto mb-10 leading-relaxed">
-              Warden Automations; lead’leri keşfeden, nitelendiren ve 7/24 yanıtlayan otonom bir yapay zeka ağı kurar.
-              Siz uyurken sistem çalışmaya devam eder.
-            </motion.p>
-
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' })}
-                className="group px-7 py-3.5 rounded-full font-semibold text-sm text-[#04101f]
-                  bg-gradient-to-r from-warden-cyan to-warden-blue shadow-[0_8px_30px_rgba(77,141,255,0.4)]
-                  hover:shadow-[0_14px_44px_rgba(77,141,255,0.55)] hover:-translate-y-0.5 transition-all duration-300
-                  flex items-center gap-2"
+    <main id="top">
+      {/* İLK SAYFA */}
+      <section aria-labelledby="hero-title" className="px-5 sm:px-8 pt-6 sm:pt-8 pb-16 sm:pb-20">
+        <div className="max-w-sheet mx-auto">
+          <GuillocheBand className="block w-full h-7 sm:h-9" />
+          <div className="grid lg:grid-cols-12 gap-x-8 gap-y-6 pt-10 sm:pt-14">
+            <div className="lg:col-span-7">
+              <h1
+                id="hero-title"
+                className="w-semiwide text-[2.55rem] sm:text-[3.7rem] lg:text-[4.35rem] xl:text-[5rem] font-bold leading-[0.98] tracking-[-0.035em] text-ink"
               >
-                Çözümleri İncele
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <a href="#contact"
-                className="px-7 py-3.5 rounded-full text-sm font-medium border border-[rgba(120,150,220,0.2)]
-                  text-zinc-200 hover:border-warden-blue hover:bg-[rgba(77,141,255,0.08)] transition-all duration-300">
-                İletişime Geç
-              </a>
-            </motion.div>
+                Şirketinizde hangi iş kendi kendine dönebilir?
+              </h1>
+              <p className="pt-6 text-[18px] sm:text-[20px] leading-relaxed text-ink-soft max-w-[52ch]">
+                On beş soruluk formu doldurun. Cevaplarınızı n8n üzerinde kurduğumuz analiz akışından geçirip şirketinize
+                özel, kurulabilir bir otomasyon önerisi çıkaralım.
+              </p>
 
-            <motion.div variants={fadeInUp}
-              className="mt-16 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-zinc-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-warden-cyan animate-pulseDot" />
-              aşağı kaydır
-            </motion.div>
-          </motion.div>
+              <div className="mt-10 border-t-2 border-ink pt-4" role="group" aria-labelledby="hero-sector">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <p id="hero-sector" className="text-[17px] font-semibold text-ink">
+                    <span className="tnum text-ink-faint">01</span>&ensp;Sektörünüz
+                  </p>
+                  <p className="text-[14px] text-ink-faint">Bir kutu işaretleyin, form oradan devam eder.</p>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-5 pt-3">
+                  {SECTORS.map((s) => {
+                    const on = answers.sector === s.value;
+                    return (
+                      <button
+                        key={s.value}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => pickSector(s.value)}
+                        className="group flex items-start gap-3 py-2 pr-2 min-h-[44px] text-left"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="relative mt-[1px] flex-none w-[22px] h-[22px] border-[1.5px] border-ink bg-paper-lift/50 group-hover:bg-paper-lift"
+                        >
+                          {on && (
+                            <svg viewBox="0 0 28 28" className="tick-x absolute -inset-[4px] w-[28px] h-[28px] text-stamp" fill="none">
+                              <path d="M5.5 5.8C10 10.4 14.6 15.2 21.8 22.4" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+                              <path d="M22 5.4C16.6 10.6 11.8 15.8 6 22.2" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+                            </svg>
+                          )}
+                        </span>
+                        <span className="text-[16px] leading-snug text-ink">{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-          {/* STATS */}
-          <motion.div
-            initial={{ opacity: 0, y: 28, rotateX: 16, transformPerspective: 900 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0, transformPerspective: 900 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-14 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden
-              border border-[rgba(120,150,220,0.14)] bg-[rgba(120,150,220,0.14)]"
-          >
-            {stats.map((s) => (
-              <div key={s.label} className="bg-[rgba(10,13,22,0.72)] backdrop-blur-md px-6 py-7">
-                <div className="font-display text-3xl md:text-4xl font-semibold warden-gradient-text">{s.value}</div>
-                <div className="text-sm text-zinc-500 mt-1.5 font-light">{s.label}</div>
+            <div className="lg:col-span-5 relative">
+              <Suspense fallback={<div className="aspect-square w-full" />}>
+                <Rosette3D
+                  params={heroParams}
+                  tiltWithScroll
+                  label="Ziyaretçinin cevaplarıyla şekillenen üç boyutlu güvenlik deseni"
+                  className="aspect-[5/4] sm:aspect-square w-full max-w-[560px] mx-auto"
+                />
+              </Suspense>
+              <div className="absolute right-0 top-2 sm:top-6 max-w-[17rem] text-right">
+                <p className="text-[14px] leading-snug text-ink-soft">
+                  Bu desen sizin. Formdaki her cevap iplikleri yeniden örer; gönderdiğinizde kaşeyle mühürlenir.
+                </p>
+                <svg viewBox="0 0 120 100" className="ml-auto mt-1 w-[96px] h-[80px] text-ink" fill="none" aria-hidden="true">
+                  <path d="M112 2 C112 44 84 78 16 94" stroke="currentColor" strokeWidth="1" />
+                  <circle cx="14" cy="94.5" r="3" fill="currentColor" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <dl className="mt-12 sm:mt-14 grid grid-cols-3 border-t border-ink">
+            {[
+              ['Süre', 'Yaklaşık 4 dakika'],
+              ['Soru', String(QUESTION_COUNT)],
+              ['Ücret', 'Yok'],
+            ].map(([k, v], i) => (
+              <div key={k} className={`py-4 pr-4 ${i > 0 ? 'pl-4 border-l border-rule' : ''}`}>
+                <dt className="label text-ink-faint">{k}</dt>
+                <dd className="tnum pt-1 text-[17px] font-semibold text-ink">{v}</dd>
               </div>
             ))}
-          </motion.div>
+          </dl>
         </div>
       </section>
 
-      <IntegrationsMarquee />
-
-      {/* PRODUCTS */}
-      <section id="solutions" className="relative py-20 sm:py-28 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mb-16"
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.32em] text-warden-cyan">Ürünler</span>
-            <h2 className="font-display text-4xl md:text-5xl font-medium text-zinc-50 mt-4 mb-4 tracking-tight">
-              Ağı oluşturan üç otonom ajan
+      {/* SÜREÇ */}
+      <section id="surec" aria-labelledby="surec-title" className="px-5 sm:px-8 py-24 sm:py-32">
+        <div className="max-w-sheet mx-auto grid lg:grid-cols-12 gap-x-8 gap-y-10 border-t-2 border-ink pt-8">
+          <div className="lg:col-span-4">
+            <h2 id="surec-title" className="w-wide text-[2rem] sm:text-[2.5rem] font-bold leading-[1.05] tracking-[-0.02em] text-ink">
+              Form nereye gider?
             </h2>
-            <p className="text-lg text-zinc-400 font-light">
-              Her biri tek başına güçlü, birlikte kesintisiz bir büyüme makinesi.
+            <p className="pt-4 text-[17px] leading-relaxed text-ink-soft max-w-[36ch]">
+              Hazır paket satmıyoruz. Önce işinizi dinliyor, sonra size uyan otomasyonu öneriyoruz.
             </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {products.map((product, idx) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 32, rotateX: 14, transformPerspective: 1000 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0, transformPerspective: 1000 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full"
-              >
-                <ProductCard {...product} onDemoClick={() => handleProductClick(product)} />
-              </motion.div>
+          </div>
+          <ol className="lg:col-span-8 border-t border-ink">
+            {STEPS.map((s, i) => (
+              <li key={s.what} className="grid grid-cols-[3.5rem_1fr] sm:grid-cols-[4.5rem_1fr] gap-x-4 py-7 border-b border-ink">
+                <span
+                  aria-hidden="true"
+                  className="tnum flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full border-[1.5px] border-ink text-[17px] font-bold text-ink"
+                >
+                  {i + 1}
+                </span>
+                <div className="pt-2 sm:pt-[10px]">
+                  <p className="text-[19px] font-semibold leading-snug text-ink">{s.what}</p>
+                  <p className="pt-2 text-[17px] leading-relaxed text-ink-soft max-w-[58ch]">{s.detail}</p>
+                </div>
+              </li>
             ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ÖRNEKLER */}
+      <section id="ornekler" aria-labelledby="ornekler-title" className="px-5 sm:px-8 py-8 sm:py-12">
+        <div className="max-w-sheet mx-auto border-t-2 border-ink pt-8">
+          <div className="grid lg:grid-cols-12 gap-x-8 gap-y-4">
+            <h2
+              id="ornekler-title"
+              className="lg:col-span-6 w-wide text-[2rem] sm:text-[2.5rem] font-bold leading-[1.05] tracking-[-0.02em] text-ink"
+            >
+              Kurabileceğimiz otomasyonlardan örnekler
+            </h2>
+            <p className="lg:col-span-5 lg:col-start-8 self-end text-[17px] leading-relaxed text-ink-soft">
+              Fikir vermesi için. Size önerilecek otomasyon bu listeden seçilmez; formdaki cevaplarınıza göre hazırlanır.
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <div
+              className="hidden md:grid md:grid-cols-[4.5rem_10rem_1fr_1.35fr_11rem] gap-x-5 pb-2 border-b-2 border-ink label text-ink-faint"
+              aria-hidden="true"
+            >
+              <span>Kod</span>
+              <span>Kimin için</span>
+              <span>Sorun</span>
+              <span>Otomasyon</span>
+              <span>Araçlar</span>
+            </div>
+            <ul>
+              {EXAMPLES.map((e) => (
+                <li
+                  key={e.code}
+                  className="grid grid-cols-[4rem_1fr] md:grid-cols-[4.5rem_10rem_1fr_1.35fr_11rem] gap-x-5 gap-y-1.5 py-5 border-b border-rule"
+                >
+                  <span className="tnum row-span-4 md:row-span-1 text-[15px] font-bold text-ink">{e.code}</span>
+                  <span className="text-[15px] font-semibold text-ink">{e.who}</span>
+                  <span className="text-[16px] leading-snug text-ink-soft">{e.problem}</span>
+                  <span className="text-[16px] leading-snug text-ink">{e.automation}</span>
+                  <span className="text-[14px] leading-snug text-ink-faint">{e.tools}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="pt-6 text-[15px] leading-relaxed text-ink-soft max-w-[90ch]">
+              <span className="font-semibold text-ink">Bağlanabildiğimiz araçlardan bazıları:</span> {TOOL_NAMES.join(' · ')}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how" className="relative py-20 sm:py-28 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.32em] text-warden-cyan">Nasıl Çalışır</span>
-            <h2 className="font-display text-4xl md:text-5xl font-medium text-zinc-50 mt-4 mb-5 tracking-tight">
-              Tek bir yaşayan ağ
-            </h2>
-            <p className="text-lg text-zinc-400 font-light leading-relaxed">
-              Üç ürün ayrı araçlar değil — birbiriyle konuşan tek bir otonom sinir ağı. Robot fırsatı bulur,
-              skorlama beyni önceliklendirir, sesli asistan kapatır.
-            </p>
-          </motion.div>
-
-          <div>
-            {steps.map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial={{ opacity: 0, x: 24 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="flex gap-5"
-              >
-                <div className="flex-none flex flex-col items-center">
-                  <span className="flex items-center justify-center w-11 h-11 rounded-xl
-                    border border-[rgba(120,150,220,0.18)] bg-[rgba(77,141,255,0.08)] text-warden-cyan">
-                    <s.Icon className="w-5 h-5" strokeWidth={1.6} />
-                  </span>
-                  {i < steps.length - 1 && (
-                    <span className="w-px flex-1 my-2 bg-gradient-to-b from-[rgba(77,141,255,0.45)] via-[rgba(47,230,224,0.2)] to-transparent" />
-                  )}
-                </div>
-                <div className={i < steps.length - 1 ? 'pb-10' : ''}>
-                  <div className="flex items-baseline gap-3">
-                    <span className="font-mono text-sm text-warden-blue">{s.n}</span>
-                    <h4 className="font-display text-xl font-semibold text-zinc-50">{s.t}</h4>
-                  </div>
-                  <p className="text-zinc-400 font-light mt-1.5">{s.d}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ComparisonSection />
+      <AutomationForm
+        answers={answers}
+        onChange={setAnswers}
+        registryNo={registryNo}
+        onSent={() => {
+          sent.current = true;
+          try {
+            localStorage.removeItem(DRAFT_KEY);
+          } catch {
+            /* depolama yoksa silinecek taslak da yok */
+          }
+        }}
+        onReset={() => {
+          sent.current = false;
+          setAnswers(EMPTY_ANSWERS);
+          onNewRegistry();
+        }}
+      />
 
       <FaqSection />
-
-      {/* CONTACT CTA */}
-      <section id="contact" className="relative py-16 sm:py-24 px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 32, rotateX: 10, transformPerspective: 1100 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0, transformPerspective: 1100 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-3xl text-center px-8 py-16 md:py-24
-              border border-[rgba(120,150,220,0.14)] backdrop-blur-md"
-            style={{
-              background:
-                'radial-gradient(600px 300px at 50% 0%, rgba(77,141,255,0.18), transparent 70%), rgba(10,13,22,0.82)',
-            }}
-          >
-            <span className="font-mono text-[11px] uppercase tracking-[0.32em] text-warden-cyan">Başlayalım</span>
-            <h2 className="font-display text-4xl md:text-5xl font-medium text-zinc-50 mt-5 mb-5 tracking-tight max-w-[16ch] mx-auto">
-              Çözümleri keşfetmeye hazır mısınız?
-            </h2>
-            <p className="text-lg text-zinc-400 font-light mb-9">
-              İşletmenize özel otonom ağı 20 dakikada planlayalım.
-            </p>
-            <motion.a
-              href="https://calendly.com/e7555222/15-min-ai-strategy-discovery-call-warden-automations"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -2 }}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm text-[#04101f]
-                bg-gradient-to-r from-warden-cyan to-warden-blue shadow-[0_8px_30px_rgba(77,141,255,0.4)]
-                hover:shadow-[0_14px_44px_rgba(77,141,255,0.55)] transition-all duration-300"
-            >
-              Demo Talep Et
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
-            <a href="mailto:hello@wardenautomations.com"
-              className="block mt-6 font-mono text-sm text-warden-cyan hover:text-zinc-100 transition-colors">
-              hello@wardenautomations.com
-            </a>
-          </motion.div>
-        </div>
-      </section>
-    </>
+    </main>
   );
 }

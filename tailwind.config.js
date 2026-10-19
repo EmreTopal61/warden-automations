@@ -4,32 +4,29 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Clash Display"', 'system-ui', 'sans-serif'],
-        sans: ['Satoshi', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Tek aile: Archivo (wdth 62–125, wght 100–900). Genişlik, ses tonunu taşır.
+        sans: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
       },
       colors: {
-        warden: {
-          blue: '#4d8dff',
-          'blue-deep': '#2563eb',
-          cyan: '#2fe6e0',
-          amber: '#ffb24d',
-          violet: '#b06bff',
+        // Güvenlik kâğıdı dünyası — renk adları rollerini söyler.
+        paper: {
+          DEFAULT: '#E6EAE3',
+          lift: '#EEF1EB',
         },
+        ink: {
+          DEFAULT: '#151A27', // Warden'ın bastığı her şey
+          soft: '#3D4557',
+          faint: '#596174',
+        },
+        rule: 'rgba(21, 26, 39, 0.26)',
+        stamp: {
+          DEFAULT: '#5B3BA6', // yalnızca ziyaretçinin kendi işaretleri
+          light: '#9A86CF',
+        },
+        registry: '#B3261E', // evrak numaraları ve düzeltme notları
       },
-      keyframes: {
-        pulseDot: {
-          '0%, 100%': { opacity: '0.3', transform: 'scale(0.8)' },
-          '50%': { opacity: '1', transform: 'scale(1.4)' },
-        },
-        floaty: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-6px)' },
-        },
-      },
-      animation: {
-        pulseDot: 'pulseDot 1.8s ease-in-out infinite',
-        floaty: 'floaty 6s ease-in-out infinite',
+      maxWidth: {
+        sheet: '1240px',
       },
     },
   },

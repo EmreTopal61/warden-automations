@@ -3,93 +3,122 @@
 @tailwind utilities;
 
 :root {
-  --bg: #05060a;
-  --panel: rgba(18, 22, 34, 0.5);
-  --panel-line: rgba(120, 150, 220, 0.14);
+  --paper: #e6eae3;
+  --ink: #151a27;
+  --stamp: #5b3ba6;
+  --registry: #b3261e;
+  --rule: rgba(21, 26, 39, 0.26);
+  color-scheme: light;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    background: var(--bg);
-    font-family: 'Satoshi', system-ui, sans-serif;
+    background-color: var(--paper);
+    /* güvenlik kâğıdı: ince guilloche zemin baskısı (dikişsiz döşenir) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%23151a27' stroke-opacity='.06' stroke-width='.6'%3E%3Cpath d='M0 15.0L4 17.8L8 20.5L12 22.9L16 25.0L20 26.7L24 27.8L28 28.4L32 28.4L36 27.8L40 26.7L44 25.0L48 22.9L52 20.5L56 17.8L60 15.0L64 12.2L68 9.5L72 7.1L76 5.0L80 3.3L84 2.2L88 1.6L92 1.6L96 2.2L100 3.3L104 5.0L108 7.1L112 9.5L116 12.2L120 15.0L124 17.8L128 20.5L132 22.9L136 25.0L140 26.7L144 27.8L148 28.4L152 28.4L156 27.8L160 26.7L164 25.0L168 22.9L172 20.5L176 17.8L180 15.0L184 12.2L188 9.5L192 7.1L196 5.0L200 3.3L204 2.2L208 1.6L212 1.6L216 2.2L220 3.3L224 5.0L228 7.1L232 9.5L236 12.2L240 15.0'/%3E%3Cpath d='M0 26.7L4 25.0L8 22.9L12 20.5L16 17.8L20 15.0L24 12.2L28 9.5L32 7.1L36 5.0L40 3.3L44 2.2L48 1.6L52 1.6L56 2.2L60 3.3L64 5.0L68 7.1L72 9.5L76 12.2L80 15.0L84 17.8L88 20.5L92 22.9L96 25.0L100 26.7L104 27.8L108 28.4L112 28.4L116 27.8L120 26.7L124 25.0L128 22.9L132 20.5L136 17.8L140 15.0L144 12.2L148 9.5L152 7.1L156 5.0L160 3.3L164 2.2L168 1.6L172 1.6L176 2.2L180 3.3L184 5.0L188 7.1L192 9.5L196 12.2L200 15.0L204 17.8L208 20.5L212 22.9L216 25.0L220 26.7L224 27.8L228 28.4L232 28.4L236 27.8L240 26.7'/%3E%3Cpath d='M0 3.3L4 2.2L8 1.6L12 1.6L16 2.2L20 3.3L24 5.0L28 7.1L32 9.5L36 12.2L40 15.0L44 17.8L48 20.5L52 22.9L56 25.0L60 26.7L64 27.8L68 28.4L72 28.4L76 27.8L80 26.7L84 25.0L88 22.9L92 20.5L96 17.8L100 15.0L104 12.2L108 9.5L112 7.1L116 5.0L120 3.3L124 2.2L128 1.6L132 1.6L136 2.2L140 3.3L144 5.0L148 7.1L152 9.5L156 12.2L160 15.0L164 17.8L168 20.5L172 22.9L176 25.0L180 26.7L184 27.8L188 28.4L192 28.4L196 27.8L200 26.7L204 25.0L208 22.9L212 20.5L216 17.8L220 15.0L224 12.2L228 9.5L232 7.1L236 5.0L240 3.3'/%3E%3Cpath d='M0 58.5L4 58.2L8 57.3L12 55.9L16 54.0L20 51.8L24 49.2L28 46.4L32 43.6L36 40.8L40 38.3L44 36.0L48 34.1L52 32.7L56 31.8L60 31.5L64 31.8L68 32.7L72 34.1L76 36.0L80 38.2L84 40.8L88 43.6L92 46.4L96 49.2L100 51.8L104 54.0L108 55.9L112 57.3L116 58.2L120 58.5L124 58.2L128 57.3L132 55.9L136 54.0L140 51.8L144 49.2L148 46.4L152 43.6L156 40.8L160 38.3L164 36.0L168 34.1L172 32.7L176 31.8L180 31.5L184 31.8L188 32.7L192 34.1L196 36.0L200 38.3L204 40.8L208 43.6L212 46.4L216 49.2L220 51.8L224 54.0L228 55.9L232 57.3L236 58.2L240 58.5'/%3E%3Cpath d='M0 38.3L4 36.0L8 34.1L12 32.7L16 31.8L20 31.5L24 31.8L28 32.7L32 34.1L36 36.0L40 38.2L44 40.8L48 43.6L52 46.4L56 49.2L60 51.7L64 54.0L68 55.9L72 57.3L76 58.2L80 58.5L84 58.2L88 57.3L92 55.9L96 54.0L100 51.8L104 49.2L108 46.4L112 43.6L116 40.8L120 38.3L124 36.0L128 34.1L132 32.7L136 31.8L140 31.5L144 31.8L148 32.7L152 34.1L156 36.0L160 38.2L164 40.8L168 43.6L172 46.4L176 49.2L180 51.7L184 54.0L188 55.9L192 57.3L196 58.2L200 58.5L204 58.2L208 57.3L212 55.9L216 54.0L220 51.8L224 49.2L228 46.4L232 43.6L236 40.8L240 38.3'/%3E%3Cpath d='M0 38.2L4 40.8L8 43.6L12 46.4L16 49.2L20 51.7L24 54.0L28 55.9L32 57.3L36 58.2L40 58.5L44 58.2L48 57.3L52 55.9L56 54.0L60 51.8L64 49.2L68 46.4L72 43.6L76 40.8L80 38.3L84 36.0L88 34.1L92 32.7L96 31.8L100 31.5L104 31.8L108 32.7L112 34.1L116 36.0L120 38.2L124 40.8L128 43.6L132 46.4L136 49.2L140 51.7L144 54.0L148 55.9L152 57.3L156 58.2L160 58.5L164 58.2L168 57.3L172 55.9L176 54.0L180 51.8L184 49.2L188 46.4L192 43.6L196 40.8L200 38.3L204 36.0L208 34.1L212 32.7L216 31.8L220 31.5L224 31.8L228 32.7L232 34.1L236 36.0L240 38.2'/%3E%3Cpath d='M0 75.0L4 72.2L8 69.5L12 67.1L16 65.0L20 63.3L24 62.2L28 61.6L32 61.6L36 62.2L40 63.3L44 65.0L48 67.1L52 69.5L56 72.2L60 75.0L64 77.8L68 80.5L72 82.9L76 85.0L80 86.7L84 87.8L88 88.4L92 88.4L96 87.8L100 86.7L104 85.0L108 82.9L112 80.5L116 77.8L120 75.0L124 72.2L128 69.5L132 67.1L136 65.0L140 63.3L144 62.2L148 61.6L152 61.6L156 62.2L160 63.3L164 65.0L168 67.1L172 69.5L176 72.2L180 75.0L184 77.8L188 80.5L192 82.9L196 85.0L200 86.7L204 87.8L208 88.4L212 88.4L216 87.8L220 86.7L224 85.0L228 82.9L232 80.5L236 77.8L240 75.0'/%3E%3Cpath d='M0 63.3L4 65.0L8 67.1L12 69.5L16 72.2L20 75.0L24 77.8L28 80.5L32 82.9L36 85.0L40 86.7L44 87.8L48 88.4L52 88.4L56 87.8L60 86.7L64 85.0L68 82.9L72 80.5L76 77.8L80 75.0L84 72.2L88 69.5L92 67.1L96 65.0L100 63.3L104 62.2L108 61.6L112 61.6L116 62.2L120 63.3L124 65.0L128 67.1L132 69.5L136 72.2L140 75.0L144 77.8L148 80.5L152 82.9L156 85.0L160 86.7L164 87.8L168 88.4L172 88.4L176 87.8L180 86.7L184 85.0L188 82.9L192 80.5L196 77.8L200 75.0L204 72.2L208 69.5L212 67.1L216 65.0L220 63.3L224 62.2L228 61.6L232 61.6L236 62.2L240 63.3'/%3E%3Cpath d='M0 86.7L4 87.8L8 88.4L12 88.4L16 87.8L20 86.7L24 85.0L28 82.9L32 80.5L36 77.8L40 75.0L44 72.2L48 69.5L52 67.1L56 65.0L60 63.3L64 62.2L68 61.6L72 61.6L76 62.2L80 63.3L84 65.0L88 67.1L92 69.5L96 72.2L100 75.0L104 77.8L108 80.5L112 82.9L116 85.0L120 86.7L124 87.8L128 88.4L132 88.4L136 87.8L140 86.7L144 85.0L148 82.9L152 80.5L156 77.8L160 75.0L164 72.2L168 69.5L172 67.1L176 65.0L180 63.3L184 62.2L188 61.6L192 61.6L196 62.2L200 63.3L204 65.0L208 67.1L212 69.5L216 72.2L220 75.0L224 77.8L228 80.5L232 82.9L236 85.0L240 86.7'/%3E%3Cpath d='M0 91.5L4 91.8L8 92.7L12 94.1L16 96.0L20 98.3L24 100.8L28 103.6L32 106.4L36 109.2L40 111.7L44 114.0L48 115.9L52 117.3L56 118.2L60 118.5L64 118.2L68 117.3L72 115.9L76 114.0L80 111.8L84 109.2L88 106.4L92 103.6L96 100.8L100 98.3L104 96.0L108 94.1L112 92.7L116 91.8L120 91.5L124 91.8L128 92.7L132 94.1L136 96.0L140 98.3L144 100.8L148 103.6L152 106.4L156 109.2L160 111.7L164 114.0L168 115.9L172 117.3L176 118.2L180 118.5L184 118.2L188 117.3L192 115.9L196 114.0L200 111.8L204 109.2L208 106.4L212 103.6L216 100.8L220 98.3L224 96.0L228 94.1L232 92.7L236 91.8L240 91.5'/%3E%3Cpath d='M0 111.7L4 114.0L8 115.9L12 117.3L16 118.2L20 118.5L24 118.2L28 117.3L32 115.9L36 114.0L40 111.8L44 109.2L48 106.4L52 103.6L56 100.8L60 98.3L64 96.0L68 94.1L72 92.7L76 91.8L80 91.5L84 91.8L88 92.7L92 94.1L96 96.0L100 98.3L104 100.8L108 103.6L112 106.4L116 109.2L120 111.7L124 114.0L128 115.9L132 117.3L136 118.2L140 118.5L144 118.2L148 117.3L152 115.9L156 114.0L160 111.8L164 109.2L168 106.4L172 103.6L176 100.8L180 98.3L184 96.0L188 94.1L192 92.7L196 91.8L200 91.5L204 91.8L208 92.7L212 94.1L216 96.0L220 98.3L224 100.8L228 103.6L232 106.4L236 109.2L240 111.7'/%3E%3Cpath d='M0 111.8L4 109.2L8 106.4L12 103.6L16 100.8L20 98.2L24 96.0L28 94.1L32 92.7L36 91.8L40 91.5L44 91.8L48 92.7L52 94.1L56 96.0L60 98.3L64 100.8L68 103.6L72 106.4L76 109.2L80 111.7L84 114.0L88 115.9L92 117.3L96 118.2L100 118.5L104 118.2L108 117.3L112 115.9L116 114.0L120 111.8L124 109.2L128 106.4L132 103.6L136 100.8L140 98.3L144 96.0L148 94.1L152 92.7L156 91.8L160 91.5L164 91.8L168 92.7L172 94.1L176 96.0L180 98.3L184 100.8L188 103.6L192 106.4L196 109.2L200 111.8L204 114.0L208 115.9L212 117.3L216 118.2L220 118.5L224 118.2L228 117.3L232 115.9L236 114.0L240 111.8'/%3E%3C/g%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: 'Archivo Variable', Archivo, system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    font-feature-settings: 'kern', 'liga';
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 {
-    font-family: 'Clash Display', system-ui, sans-serif;
-  }
-}
-
-@layer components {
-  .text-balance {
+  h1, h2, h3 {
     text-wrap: balance;
   }
-  /* Atmosphere layers behind the fixed 3D canvas */
-  .warden-nebula {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(900px 600px at 18% 12%, rgba(77, 141, 255, 0.16), transparent 60%),
-      radial-gradient(820px 720px at 85% 80%, rgba(176, 107, 255, 0.12), transparent 60%),
-      radial-gradient(700px 520px at 60% 50%, rgba(47, 230, 224, 0.07), transparent 65%);
+  p {
+    text-wrap: pretty;
   }
-  .warden-grain {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  ::selection {
+    background: rgba(91, 59, 166, 0.22);
+    color: var(--ink);
   }
-  .warden-gradient-text {
-    background: linear-gradient(100deg, #4d8dff 8%, #2fe6e0 55%, #b06bff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  input, textarea {
+    caret-color: var(--stamp);
   }
-  /* mouse-tracked spotlight for product cards */
-  .warden-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(440px 220px at var(--mx, 50%) var(--my, 0%), rgba(77, 141, 255, 0.16), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.35s;
-    pointer-events: none;
+  :focus-visible {
+    outline: 2px solid var(--stamp);
+    outline-offset: 3px;
   }
-  .warden-card:hover::before {
-    opacity: 1;
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
   }
-  /* infinite logo strip — list is duplicated in markup, loop hides the seam */
-  .warden-marquee {
-    animation: warden-marquee 38s linear infinite;
+  /* kaydırma çubuğu da kâğıdın parçası */
+  html {
+    scrollbar-color: #8a9284 var(--paper);
+    scrollbar-width: thin;
   }
-  .warden-marquee-mask {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  ::-webkit-scrollbar {
+    width: 10px;
   }
-  .warden-marquee-mask:hover .warden-marquee {
-    animation-play-state: paused;
+  ::-webkit-scrollbar-track {
+    background: var(--paper);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #8a9284;
+    border: 3px solid var(--paper);
   }
 }
 
-@keyframes warden-marquee {
-  from {
-    transform: translateX(0);
+@layer utilities {
+  /* Archivo'nun genişlik ekseni: geniş = resmi başlık, dar = etiket */
+  .w-wide {
+    font-stretch: 125%;
   }
+  .w-semiwide {
+    font-stretch: 112%;
+  }
+  .w-narrow {
+    font-stretch: 82%;
+  }
+  .tnum {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .label {
+    font-stretch: 82%;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+}
+
+/* kutuya elle atılan çarpı: iki kalem darbesi */
+.tick-x path {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: tick-stroke 0.16s cubic-bezier(0.3, 0.7, 0.2, 1) forwards;
+}
+.tick-x path + path {
+  animation-delay: 0.11s;
+}
+@keyframes tick-stroke {
   to {
-    transform: translateX(-50%);
+    stroke-dashoffset: 0;
+  }
+}
+
+/* telefonda yapışık ilerleme şeridi odaklanan alanı örtmesin */
+@media (max-width: 1023px) {
+  html {
+    scroll-padding-bottom: 96px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
