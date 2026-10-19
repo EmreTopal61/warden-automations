@@ -25,7 +25,7 @@ Paket ürün satmak yerine önce şirketin kendi süreçlerini dinleyip ona öze
 - Ziyaretçi masaüstünde ofiste ya da telefonda, iş arasında siteye bakar.
 - Form yanıtı bir n8n webhook'una POST edilir; analiz sonucu e-postayla ya da keşif görüşmesinde iletilir *(çıkarım; sonuç kanalı henüz kararlaştırılmadı)*.
 - Keşif görüşmesi Calendly üzerinden alınır (15 dk).
-- İletişim: hello@wardenautomations.com, İstanbul.
+- İletişim: emre@wardenautomations.com, İstanbul.
 
 ## Capabilities and Constraints
 

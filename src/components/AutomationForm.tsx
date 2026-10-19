@@ -625,8 +625,8 @@ export default function AutomationForm({ answers, onChange, registryNo, onSent, 
                 {status === 'error' && (
                   <div role="alert" className="mt-8 border-t border-b border-registry py-4 text-[16px] text-registry">
                     Form gönderilemedi. Bağlantınızı kontrol edip tekrar deneyin. Sorun sürerse cevaplarınızı{' '}
-                    <a href="mailto:hello@wardenautomations.com" className="underline font-semibold">
-                      hello@wardenautomations.com
+                    <a href="mailto:emre@wardenautomations.com" className="underline font-semibold">
+                      emre@wardenautomations.com
                     </a>{' '}
                     adresine yazabilirsiniz; evrak numaranızı ({registryNo}) eklemeyi unutmayın.
                   </div>

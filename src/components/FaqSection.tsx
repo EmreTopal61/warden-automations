@@ -46,8 +46,8 @@ export default function FaqSection() {
           </h2>
           <p className="pt-4 text-[17px] leading-relaxed text-ink-soft max-w-[36ch]">
             Sorunuz burada yoksa{' '}
-            <a href="mailto:hello@wardenautomations.com" className="font-semibold text-ink underline hover:text-stamp">
-              hello@wardenautomations.com
+            <a href="mailto:emre@wardenautomations.com" className="font-semibold text-ink underline hover:text-stamp">
+              emre@wardenautomations.com
             </a>{' '}
             adresine yazın.
           </p>

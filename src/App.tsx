@@ -118,8 +118,8 @@ export default function App() {
               <p className="label text-ink-faint">İletişim</p>
               <ul className="pt-3 space-y-2 text-[16px]">
                 <li>
-                  <a href="mailto:hello@wardenautomations.com" className="font-medium text-ink hover:underline">
-                    hello@wardenautomations.com
+                  <a href="mailto:emre@wardenautomations.com" className="font-medium text-ink hover:underline">
+                    emre@wardenautomations.com
                   </a>
                 </li>
                 <li>
