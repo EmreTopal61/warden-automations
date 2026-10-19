@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -11,6 +12,11 @@ export default defineConfig({
     // three.js tek parça ~680KB; kasıtlı olarak ayrı/tembel chunk'ta tutuluyor, uyarı gürültü.
     chunkSizeWarningLimit: 700,
     rollupOptions: {
+      // ikinci sayfa: KVKK aydınlatma metni (/kvkk.html)
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        kvkk: resolve(__dirname, 'kvkk.html'),
+      },
       output: {
         // 3D yığınını ayrı chunk'lara böl — initial bundle küçük kalsın, tembel yüklensin.
         manualChunks: {

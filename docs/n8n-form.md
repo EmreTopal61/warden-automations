@@ -11,6 +11,8 @@ n8n'de **"Warden Form WA-01 · Analiz ve Görüşme Daveti"** akışı kurulu (k
 3. **Otomasyon Önerisi Çıkar** (OpenAI, `gpt-5-mini`) — şirkete uygun tek otomasyonu yapılandırılmış JSON olarak üretir → **Bana Bildir** öneriyi ve cevapları e7555222@gmail.com adresine yollar (yanıtla = şirkete yaz).
 4. **Şirkete Görüşme Daveti** — formu dolduran kişiye Calendly bağlantılı, sabit şablonlu teşekkür e-postası. Yapay zekâ şirkete giden metni yazmaz.
 
+5. **Hata bildirimi** — kayıt, analiz veya iki e-posta adımından biri hata verirse hata `warden_form_hatalar` tablosuna yazılır ve form cevaplarıyla birlikte size uyarı e-postası gider. Webhook, geçerli e-posta içermeyen istekleri hiç çalıştırmaz.
+
 Production webhook adresi: `https://z48xg9uy.rpcld.app/webhook/warden-form`
 
 Yayına almadan önce: **OpenAI Modeli** düğümündeki "OpenAI account" kimliğine kendi API anahtarınızı girin.
@@ -91,4 +93,4 @@ Sonucu Gmail düğümüyle `{{ $json.body.email }}` adresine, konu satırında `
 
 ## Not: KVKK
 
-Formdaki onay kutusu tek başına yeterli olmayabilir. Sitede ayrı bir **KVKK aydınlatma metni** yayınlayıp onay kutusundan bu metne bağlantı vermeniz önerilir.
+Aydınlatma metni `kvkk.html` sayfasında; formdaki onay kutusu ve alt bilgi bu sayfaya bağlı. Akışa yeni bir hizmet sağlayıcı eklerseniz (ör. CRM) metindeki "Kimlere aktarıyoruz" bölümünü de güncelleyin. Ticari unvan, adres ve saklama süresi bir hukukçu tarafından kontrol edilmelidir.

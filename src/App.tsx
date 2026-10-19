@@ -133,7 +133,7 @@ export default function App() {
             <div className="md:col-span-3">
               <p className="label text-ink-faint">Bu sayfada</p>
               <ul className="pt-3 space-y-2 text-[16px]">
-                {[...LINKS, { label: 'Form WA-01', href: '#form' }].map((l) => (
+                {[...LINKS, { label: 'Form WA-01', href: '#form' }, { label: 'KVKK aydınlatma metni', href: '/kvkk.html' }].map((l) => (
                   <li key={l.href}>
                     <a href={l.href} className="font-medium text-ink hover:underline">
                       {l.label}

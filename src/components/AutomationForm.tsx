@@ -110,7 +110,7 @@ function Tick({
   name: string;
   checked: boolean;
   onChange: () => void;
-  label: string;
+  label: ReactNode;
   describedBy?: string;
 }) {
   return (
@@ -599,7 +599,20 @@ export default function AutomationForm({ answers, onChange, registryNo, onSent, 
                     name="kvkkConsent"
                     checked={answers.kvkkConsent}
                     onChange={() => set('kvkkConsent', !answers.kvkkConsent)}
-                    label="Bu formdaki bilgilerimin, bana otomasyon önerisi hazırlanması ve benimle iletişime geçilmesi amacıyla işlenmesini kabul ediyorum (KVKK)."
+                    label={
+                      <>
+                        <a
+                          href="/kvkk.html"
+                          target="_blank"
+                          rel="noopener"
+                          className="font-semibold underline hover:text-stamp"
+                        >
+                          KVKK aydınlatma metnini
+                        </a>{' '}
+                        okudum. Bu formdaki bilgilerimin bana otomasyon önerisi hazırlanması ve benimle iletişime geçilmesi
+                        amacıyla işlenmesini ve bu amaçla yurt dışındaki hizmet sağlayıcılara aktarılmasını kabul ediyorum.
+                      </>
+                    }
                     describedBy={errors.kvkkConsent ? 'err-kvkkConsent' : undefined}
                   />
                   {errors.kvkkConsent && (
